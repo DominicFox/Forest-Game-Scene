@@ -9,6 +9,7 @@ Here are some key features:
  - Interactivity: The player can use the mouse to move the viewpoint of the first-person camera and also can press the following keys to trigger functions in the game.WASD: walk, SHIFT: run, SPACE: jump, T: toggle torch, C: toggle camera view, F: interact with door.
  - Menu: I have included a menu to explain the game and controls at the start.
  - Levels: There are two environments to explore, a cabin and a forest.
+ - Generation: The trees are not pre-placed, their positions and sizes are randomly generated when the game is run, creating a slightly different forest each time.
  - Lighting: There are four light sources in the forest. There is ambient light from the 
 moon, a point light source positioned on the lamp at the cabin’s door, a point light 
 source positioned at the cabin’s window and a spotlight that follows the player and 
