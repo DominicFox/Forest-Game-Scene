@@ -1,0 +1,85 @@
+<!DOCTYPE html>
+
+<html>
+
+<head>
+    <title>Forest At Night</title>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="stylesheet" href="../GameSceneFiles/Scene.css">
+
+</head>
+
+<!-- Code for vertex-shader and fragment-shader is heavily inspired from the page https://soledadpenades.com/articles/three-js-tutorials/rendering-snow-with-shaders/-->
+<script id="vertex-shader" type="x-shader/x-vertex">
+    uniform float height;
+    uniform float elapsedTime;
+    uniform float radiusX;
+    uniform float radiusZ;
+    uniform float size;
+    uniform float scale;
+    uniform float horizontalSpeed;
+    uniform float verticalSpeed;
+    void main() {
+        vec3 pos = position;
+
+        // Animate snow falling to the ground over time
+        pos.y = mod(pos.y - elapsedTime * verticalSpeed, height);
+
+        // Handle the swirling of the snow as it falls
+        pos.x += cos((elapsedTime + position.z) * 0.25 * horizontalSpeed) * radiusX;
+        pos.z += sin((elapsedTime + position.x) * 0.25 * horizontalSpeed) * radiusZ;
+
+        vec4 mvPosition = modelViewMatrix * vec4( pos, 1.0 );
+
+        //Make the size of the snow particles smaller when they are further from the camera
+        gl_PointSize = size * ( scale / length( mvPosition.xyz ) );
+
+        gl_Position = projectionMatrix * mvPosition;
+
+    }
+</script>
+
+<script id="fragment-shader" type="x-shader/x-fragment">
+    uniform vec3 color;
+    uniform float opacity;
+    uniform sampler2D texMap;
+
+    void main() {
+        vec4 texColor = texture2D( texMap, gl_PointCoord );
+        gl_FragColor = texColor * vec4(color, opacity);
+    }
+</script>
+
+<body>
+    <div class = 'container'>
+        <canvas id="gl-canvas" width="1920" height="1080"></canvas>
+
+        <div id = 'blocker'>
+            <div id = "instructions">
+                <p style='font-size: 36px; text-align: center;'>CLICK TO PLAY</p>
+                <p>This game features a snowy forest environment at night time. There's a cabin situated in the middle which you can enter by walking up to the door and pressing F.</p>
+                <p>MOUSE: LOOK AROUND</p>    
+                <p>WASD: MOVE</p> 
+                <p>SHIFT: SPRINT</p>
+                <p>SPACE: JUMP</p> 
+                <p>T: TOGGLE TORCH</p> 
+                <p>C: CHANGE CAMERA VIEW</p>
+            </div>
+        </div>
+
+        <div id = "fpslabel">
+            <p id = 'fpscounter'>FPS: 0</p>
+        </div>
+
+        <div id = "hud">
+            <p id = 'cabinenterlabel' style = 'display: none'>Press F to enter cabin</p>
+            <p id = 'forestenterlabel' style = 'display: none'>Press F to enter forest</p>
+        </div>
+
+    </div>
+    
+    <script type="module" charset="UTF-8" src="Scene.js"></script>
+</body>
+
+</html>
